@@ -1,0 +1,35 @@
+version: '3'
+services:
+  pandasdb:
+    image: mysql:5.7
+    container_name: pandasdb
+    ports:
+      - "33061:3306"
+    volumes:
+      - database:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: pandas
+      MYSQL_DATABASE: pandas
+      MYSQL_USER: pandas
+      MYSQL_PASSWORD: pandas
+  pandas:
+    image: chikuchu/pandas:latest
+    build: .
+    container_name: 'pandas'
+    working_dir: '/root/'
+    tty: true
+    volumes:
+      - opt:/root/opt
+    depends_on:
+      - pandasdb
+volumes:
+  opt:
+    driver_opts:
+      type: none
+      device: /Users/chikuchu/docker/pandas/opt/
+      o: bind
+  database:
+    driver_opts:
+      type: none
+      device: /Users/chikuchu/docker/pandas/pandasdb/
+      o: bind
